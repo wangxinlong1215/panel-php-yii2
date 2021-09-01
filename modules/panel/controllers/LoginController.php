@@ -2,26 +2,28 @@
 
 namespace app\modules\panel\controllers;
 
-use app\components\Code;
-use app\components\JsonResult;
-use app\models\Admin;
+use app\common\components\Code;
+use app\common\components\JsonResult;
+use app\models\data\Admin;
 use app\modules\panel\services\AdminService;
 use Yii;
 use yii\helpers\ArrayHelper;
 
-class LoginController extends BaseController {
-    public $enableCsrfValidation = FALSE;
-    public $layout = FALSE;
-    protected $except = ['index', 'login', 'logout', 'check', 'admin-info'];
-    protected $verbs = [
-        'index' => ['get'],
-        'login' => ['post'],
-        'logout' => ['get', 'post'],
-        'check' => ['post'],
+class LoginController extends BaseController
+{
+    public    $enableCsrfValidation = FALSE;
+    public    $layout               = FALSE;
+    protected $except               = ['index', 'login', 'logout', 'check', 'admin-info'];
+    protected $verbs                = [
+        'index'      => ['get'],
+        'login'      => ['post'],
+        'logout'     => ['get', 'post'],
+        'check'      => ['post'],
         'admin-info' => ['post']
     ];
 
-    public function actionIndex() {
+    public function actionIndex()
+    {
         $this->view->title = "登录";
         return $this->render('index', [
             'csrf' => $this->getCsrf()
@@ -29,23 +31,25 @@ class LoginController extends BaseController {
     }
 
     /**
-     * 登陆
+     * 登录
+     * @return mixed
      * @author 王新龙
-     * @date 2019/9/11 4:30 PM
+     * @date   2021-09-01 16:42
      */
-    public function actionLogin() {
+    public function actionLogin()
+    {
         $username = $this->post('username', '');
         $password = $this->post('password', '');
 
         $oAdmin = (new Admin())->getByUsername($username);
-        if (empty($oAdmin)) {
-            return JsonResult::returnError(Code::$admin_not_exists);
+        if (empty($oAdmin) || $oAdmin->status == Admin::STATUS_DEL) {
+            return JsonResult::error(Code::$admin_not_exists);
         }
-        if ($oAdmin->status == Admin::STATUS_PROHIBIT) {
-            return JsonResult::returnError(Code::$admin_is_blacklist);
+        if ($oAdmin->status == Admin::STATUS_BAN) {
+            return JsonResult::error(Code::$admin_is_blacklist);
         }
         if (!$oAdmin->checkPassword($password)) {
-            return JsonResult::returnError(Code::$admin_password_err);
+            return JsonResult::error(Code::$admin_password_err);
         }
 
         //注册登录信息
@@ -72,9 +76,10 @@ class LoginController extends BaseController {
      * 登出
      * @return \yii\web\Response
      * @author 王新龙
-     * @date 2019/9/11 4:30 PM
+     * @date   2019/9/11 4:30 PM
      */
-    public function actionLogout() {
+    public function actionLogout()
+    {
         /**api方式**/
         $accessToken = $this->post('access_token', '');
         if (!empty($accessToken)) {
@@ -101,9 +106,10 @@ class LoginController extends BaseController {
     /**
      * 检测登陆状态
      * @author 王新龙
-     * @date 2019/9/12 3:01 PM
+     * @date   2019/9/12 3:01 PM
      */
-    public function actionCheck() {
+    public function actionCheck()
+    {
         $oAdmin = $this->getUser();
         if (empty($oAdmin)) {
             return JsonResult::returnError(Code::$invalid_session);
@@ -118,9 +124,10 @@ class LoginController extends BaseController {
     /**
      * 获取管理员信息
      * @author 王新龙
-     * @date 2019/9/12 4:23 PM
+     * @date   2019/9/12 4:23 PM
      */
-    public function actionAdminInfo() {
+    public function actionAdminInfo()
+    {
         $accessToken = $this->post('access_token', '');
         if (!empty($accessToken)) {
             /**api方式**/

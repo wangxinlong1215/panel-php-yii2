@@ -53,6 +53,7 @@ class BaseController extends \app\common\base\BaseController
         }
 
         $this->addLog($action);
+        return TRUE;
         $module     = $action->controller->module->id;
         $controller = $action->controller->id;
         $action     = $action->id;
