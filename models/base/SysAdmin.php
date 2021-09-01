@@ -5,7 +5,7 @@ namespace app\models\base;
 use Yii;
 
 /**
- * This is the model class for table "tb_admin".
+ * This is the model class for table "tb_sys_admin".
  *
  * @property int $id
  * @property string $username 用户名
@@ -19,15 +19,16 @@ use Yii;
  * @property string|null $last_login_ip 最后登陆IP
  * @property string $created_at 创建时间
  * @property string $updated_at 最后更新时间
+ * @property string $version
  */
-class Admin extends \app\common\base\BaseModel
+class SysAdmin extends \app\common\base\BaseModel
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'tb_admin';
+        return 'tb_sys_admin';
     }
 
     /**
@@ -51,6 +52,7 @@ class Admin extends \app\common\base\BaseModel
             [['password', 'head_pic'], 'string', 'max' => 255],
             [['email'], 'string', 'max' => 128],
             [['mobile', 'last_login_ip'], 'string', 'max' => 16],
+            [['version'], 'string', 'max' => 11],
         ];
     }
 
@@ -72,6 +74,7 @@ class Admin extends \app\common\base\BaseModel
             'last_login_ip' => 'Last Login Ip',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'version' => 'Version',
         ];
     }
 }

@@ -4,7 +4,7 @@ namespace app\modules\panel\controllers;
 
 use app\common\components\Code;
 use app\common\components\JsonResult;
-use app\models\data\Admin;
+use app\models\data\SysAdmin;
 use app\modules\panel\services\AdminService;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -41,11 +41,11 @@ class LoginController extends BaseController
         $username = $this->post('username', '');
         $password = $this->post('password', '');
 
-        $oAdmin = (new Admin())->getByUsername($username);
-        if (empty($oAdmin) || $oAdmin->status == Admin::STATUS_DEL) {
+        $oAdmin = (new SysAdmin())->getByUsername($username);
+        if (empty($oAdmin) || $oAdmin->status == SysAdmin::STATUS_DEL) {
             return JsonResult::error(Code::$admin_not_exists);
         }
-        if ($oAdmin->status == Admin::STATUS_BAN) {
+        if ($oAdmin->status == SysAdmin::STATUS_BAN) {
             return JsonResult::error(Code::$admin_is_blacklist);
         }
         if (!$oAdmin->checkPassword($password)) {
@@ -131,7 +131,7 @@ class LoginController extends BaseController
         $accessToken = $this->post('access_token', '');
         if (!empty($accessToken)) {
             /**api方式**/
-            $adminInfo = (new Admin())->getByAccessToken($accessToken);
+            $adminInfo = (new SysAdmin())->getByAccessToken($accessToken);
         } else {
             /**session方式**/
             $adminInfo = $this->getUser();

@@ -44,6 +44,27 @@ class BaseModel extends \yii\db\ActiveRecord
     }
 
     /**
+     * 新增记录
+     *
+     * @param $data
+     *
+     * @return bool
+     * @author 王新龙
+     * @date   2021-09-01 17:30
+     */
+    public function updateRecord($data)
+    {
+        if (empty($data) || !is_array($data)) {
+            return FALSE;
+        }
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        if ($errors = $this->chkAttributes($data)) {
+            return $this->returnError(FALSE, implode('|', $errors));
+        }
+        return $this->save();
+    }
+
+    /**
      * 批量新增记录
      *
      * @param $values

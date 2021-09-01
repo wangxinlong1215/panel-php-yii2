@@ -4,7 +4,7 @@ namespace app\models\data;
 
 use Yii;
 
-class Admin extends \app\models\base\AdminLog
+class SysAdmin extends \app\models\base\SysAdmin
 {
     CONST SUPER_ADMIN = 'admin';
 
