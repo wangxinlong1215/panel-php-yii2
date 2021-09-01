@@ -2,9 +2,9 @@
 
 namespace app\modules\panel\controllers;
 
-use app\components\Code;
-use app\components\Helper;
-use app\models\AdminLog;
+use app\common\helper\Helper;
+use app\common\logger\Code;
+use app\models\data\AdminLog;
 use app\modules\panel\services\AdminService;
 use Yii;
 use yii\filters\AccessControl;
@@ -51,6 +51,7 @@ class BaseController extends \app\common\base\BaseController
         if (!parent::beforeAction($action)) {
             return FALSE;
         }
+
         $this->addLog($action);
         $module     = $action->controller->module->id;
         $controller = $action->controller->id;
@@ -127,6 +128,7 @@ class BaseController extends \app\common\base\BaseController
         if ($headers->has('User-Agent')) {
             $userAgent = $headers->get('User-Agent');
         }
+
         $gets   = json_encode($this->get());
         $psots  = json_encode($this->post());
         $oAdmin = $this->getUser();
@@ -144,6 +146,7 @@ class BaseController extends \app\common\base\BaseController
             'admin_mobile' => !empty($oAdmin) ? $oAdmin['mobile'] : '',
             'ip'           => Helper::getIp(),
         ];
+
         (new AdminLog())->addRecord($data);
     }
 }

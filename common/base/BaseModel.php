@@ -18,15 +18,20 @@ class BaseModel extends \yii\db\ActiveRecord
      * @author 王新龙
      * @date   2021-08-01 22:14
      */
-    public function add($data)
+    public function addRecord($data)
     {
         //1 检测数据是否有效
-        if (!is_array($data) || empty($data)) {
+        if (empty($data) || !is_array($data)) {
             return FALSE;
         }
 
-        //2  设置当前类为可添加的, 并检测是否有错误发生
         $this->setIsNewRecord(TRUE);
+
+        $time               = date('Y-m-d H:i:s');
+        $data['created_at'] = $time;
+        $data['updated_at'] = $time;
+
+        //2  设置当前类为可添加的, 并检测是否有错误发生
         if ($errors = $this->chkAttributes($data)) {
             return $this->returnError(FALSE, $errors);
         }
