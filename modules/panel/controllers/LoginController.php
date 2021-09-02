@@ -4,8 +4,8 @@ namespace app\modules\panel\controllers;
 
 use app\common\components\Code;
 use app\common\components\JsonResult;
+use app\common\services\LoginService;
 use app\models\data\SysAdmin;
-use app\modules\panel\services\AdminService;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -40,6 +40,16 @@ class LoginController extends BaseController
     {
         $username = $this->post('username', '');
         $password = $this->post('password', '');
+
+        $a = LoginService::getInstance();
+        ob_start();
+        echo '<pre>';
+        header('Content-type: text/html; charset=utf-8');
+        ini_set('xdebug.var_display_max_children', 128);
+        ini_set('xdebug.var_display_max_data', 512);
+        ini_set('xdebug.var_display_max_depth', 5);
+        var_dump($a);die;
+        die;
 
         $oAdmin = (new SysAdmin())->getByUsername($username);
         if (empty($oAdmin) || $oAdmin->status == SysAdmin::STATUS_DEL) {

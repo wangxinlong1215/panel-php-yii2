@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\panel\services;
+namespace app\common\services;
 
 use app\common\base\BaseService;
 use app\common\components\Code;
@@ -12,6 +12,8 @@ class LoginService extends BaseService
 {
     public function login($username, $password)
     {
+        echo 1;die;
+
         if (empty($username) || empty($password)) {
             return JsonResult::arr(Code::$invalid_param);
         }

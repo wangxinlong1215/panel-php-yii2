@@ -2,9 +2,9 @@
 
 namespace app\modules\panel\controllers;
 
+use app\common\components\Code;
 use app\common\helper\Helper;
-use app\common\logger\Code;
-use app\models\data\AdminLog;
+use app\models\data\SysAdminLog;
 use app\modules\panel\services\AdminService;
 use Yii;
 use yii\filters\AccessControl;
@@ -148,6 +148,6 @@ class BaseController extends \app\common\base\BaseController
             'ip'           => Helper::getIp(),
         ];
 
-        (new AdminLog())->addRecord($data);
+        (new SysAdminLog())->addRecord($data);
     }
 }
