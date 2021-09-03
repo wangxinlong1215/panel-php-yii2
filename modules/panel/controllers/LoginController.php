@@ -41,7 +41,7 @@ class LoginController extends BaseController
         $username = $this->post('username', '');
         $password = $this->post('password', '');
 
-        $a = LoginService::getInstance();
+        $a = LoginService::getInstance()->login();
         ob_start();
         echo '<pre>';
         header('Content-type: text/html; charset=utf-8');

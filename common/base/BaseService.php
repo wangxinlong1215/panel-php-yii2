@@ -2,8 +2,6 @@
 
 namespace app\common\base;
 
-use Yii;
-
 class BaseService
 {
     /**
@@ -11,15 +9,16 @@ class BaseService
      */
     private static $_instance = [];
 
+    public $error = ['code' => 999999, 'msg' => '未知错误'];
+    public $data = [];
+
     public function __construct()
     {
     }
 
     /**
      * 获取实例
-     * @return mixed
-     * @author 王新龙
-     * @date   2021-08-01 22:09
+     * @return static
      */
     public static function getInstance()
     {
