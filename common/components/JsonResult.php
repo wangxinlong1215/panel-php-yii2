@@ -11,24 +11,28 @@ class JsonResult
     /**
      * 返回数组
      *
+     * @param bool   $result
      * @param array  $code
-     * @param array  $data
+     * @param null   $data
      * @param string $msg
      *
      * @return array
      * @author 王新龙
-     * @date   2021-09-01 16:51
+     * @date   2021-09-03 11:38
      */
-    public static function arr(array $code, $data = NULL, $msg = '')
+    public static function arr(bool $result, array $code, $data = NULL, $msg = '')
     {
-        self::$data['code'] = $code['code'];
-        self::$data['msg']  = empty($msg) ? $code['msg'] : $msg;
-        if ($data !== NULL) {
-            self::$data['data'] = $data;
-        } else {
-            self::$data['data'] = (object)[];
+        $code['msg'] = empty($msg) ? $code['msg'] : $msg;
+
+        if ($data === NULL) {
+            $data = (object)[];
         }
-        return self::$data;
+
+        return [
+            $result,
+            $code,
+            $data
+        ];
     }
 
     /**

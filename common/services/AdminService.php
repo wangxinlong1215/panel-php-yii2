@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\panel\services;
+namespace app\common\services;
 
 use app\common\base\BaseService;
 use app\common\helper\Helper;

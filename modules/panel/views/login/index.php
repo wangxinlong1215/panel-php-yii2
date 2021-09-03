@@ -49,52 +49,36 @@
         index: 'lib/index' //主入口模块
     }).use(['index', 'user'], function () {
         var $ = layui.$
-            , setter = layui.setter
-            , admin = layui.admin
-            , form = layui.form
-            , router = layui.router()
-            , search = router.search;
+            , form = layui.form;
 
         form.render();
 
         form.on('submit(LAY-user-login-submit)', function (obj) {
-            admin.req({
-                type: "POST"
+            $.ajax({
+                type: 'POST'
+                , datatype: "json"
                 , url: '/panel/login/login'
                 , data: obj.field
-                // , datatype: "json"
-                , done: function (res) {
-                    // if (res.code == 0) {
-                    //     layer.closeAll();
-                    //     layer.msg('登陆成功', {
-                    //         offset: 'auto'
-                    //         , icon: 1
-                    //         , time: 1000
-                    //     });
-                    //     window.location.href = '/panel/index';
-                    // } else {
-                    //     layer.closeAll();
-                    //     layer.msg(data.msg, {
-                    //         offset: 'auto'
-                    //         , icon: 2
-                    //         , time: 1000
-                    //     });
-                    // }
+                , async: true
+                , success: function (res) {
+                    console.log(res);
+                    if (res.code > 0 || typeof (res.code) == 'undefined') {
+                        var msg = typeof (res.msg) == 'undefined' ? '操作失败' : res.msg;
+                        layer.msg(msg, {
+                            offset: 'auto'
+                            , icon: 2
+                            , time: 1000
+                        });
+                        return false;
+                    }
 
-                    //请求成功后，写入 access_token
-                    // layui.data(setter.tableName, {
-                    //     key: setter.request.tokenName
-                    //     , value: res.data.access_token
-                    // });
-
-                    //登入成功的提示与跳转
-                    // layer.msg('登入成功', {
-                    //     offset: '15px'
-                    //     , icon: 1
-                    //     , time: 1000
-                    // }, function () {
-                    //     location.href = '../'; //后台主页
-                    // });
+                    layer.msg('登入成功', {
+                        offset: 'auto'
+                        , icon: 1
+                        , time: 1000
+                    }, function () {
+                        window.location.href = '/panel/index';
+                    });
                 }
             });
         });

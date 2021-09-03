@@ -4,6 +4,7 @@ namespace app\modules\panel\controllers;
 
 use app\common\components\Code;
 use app\common\components\JsonResult;
+use app\common\services\AdminService;
 use app\common\services\LoginService;
 use app\models\data\SysAdmin;
 use Yii;
@@ -41,45 +42,17 @@ class LoginController extends BaseController
         $username = $this->post('username', '');
         $password = $this->post('password', '');
 
-        $a = LoginService::getInstance()->login();
-        ob_start();
-        echo '<pre>';
-        header('Content-type: text/html; charset=utf-8');
-        ini_set('xdebug.var_display_max_children', 128);
-        ini_set('xdebug.var_display_max_data', 512);
-        ini_set('xdebug.var_display_max_depth', 5);
-        var_dump($a);die;
-        die;
-
-        $oAdmin = (new SysAdmin())->getByUsername($username);
-        if (empty($oAdmin) || $oAdmin->status == SysAdmin::STATUS_DEL) {
-            return JsonResult::error(Code::$admin_not_exists);
-        }
-        if ($oAdmin->status == SysAdmin::STATUS_BAN) {
-            return JsonResult::error(Code::$admin_is_blacklist);
-        }
-        if (!$oAdmin->checkPassword($password)) {
-            return JsonResult::error(Code::$admin_password_err);
+        [$result, $code, $data] = LoginService::getInstance()->checkLogin($username, $password);
+        if (!$result) {
+            return JsonResult::error($code);
         }
 
-        //注册登录信息
-        AdminService::getInstance()->updateLastInfo($oAdmin->id);
+        AdminService::getInstance()->updateLastInfo($data);
 
-        $oAdmin->refresh();
-        Yii::$app->panel->login($oAdmin);
+        $data->refresh();
+        Yii::$app->panel->login($data);
 
-
-        $adminInfo = ArrayHelper::toArray($oAdmin);
-        unset($adminInfo['auth_key']);
-        unset($adminInfo['password']);
-        unset($adminInfo['password_reset_token']);
-
-        //兼容common
-        $session = \Yii::$app->session;
-        $session->setCookieParams(['httponly' => FALSE]);
-        $session->set("userinfo", $adminInfo);
-
-        return JsonResult::returnOk($adminInfo);
+        return JsonResult::ok();
     }
 
     /**

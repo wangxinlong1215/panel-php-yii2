@@ -3,8 +3,9 @@
 namespace app\models\data;
 
 use Yii;
+use yii\web\IdentityInterface;
 
-class SysAdmin extends \app\models\base\SysAdmin
+class SysAdmin extends \app\models\base\SysAdmin implements IdentityInterface
 {
     CONST SUPER_ADMIN = 'admin';
 
@@ -31,6 +32,21 @@ class SysAdmin extends \app\models\base\SysAdmin
     }
 
     /**
+     * 密码hash加密
+     *
+     * @param $password
+     *
+     * @return string
+     * @throws \yii\base\Exception
+     * @author 王新龙
+     * @date   2021-09-03 11:40
+     */
+    public function encryption($password)
+    {
+        return Yii::$app->getSecurity()->generatePasswordHash($password);
+    }
+
+    /**
      * 检测hash密码
      *
      * @param $password
@@ -49,5 +65,29 @@ class SysAdmin extends \app\models\base\SysAdmin
             return FALSE;
         }
         return TRUE;
+    }
+
+    public static function findIdentity($id)
+    {
+        return self::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = NULL)
+    {
+        return static::findOne(['access_token' => $token]);
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getAuthKey()
+    {
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        return $this->getAuthKey() === $authKey;
     }
 }

@@ -10,29 +10,33 @@ use Yii;
 
 class LoginService extends BaseService
 {
-    public function login($username, $password)
+    /**
+     * 检测登录
+     *
+     * @param $username
+     * @param $password
+     *
+     * @return array
+     * @author 王新龙
+     * @date   2021-09-03 11:39
+     */
+    public function checkLogin($username, $password)
     {
-        echo 1;die;
-
         if (empty($username) || empty($password)) {
-            return JsonResult::arr(Code::$invalid_param);
+            return JsonResult::arr(FALSE, Code::$invalid_param);
         }
         /** @var SysAdmin $oAdmin */
         $oAdmin = (new SysAdmin())->getByUsername($username);
         if (empty($oAdmin) || $oAdmin->status == SysAdmin::STATUS_DEL) {
-            return JsonResult::error(Code::$admin_not_exists);
+            return JsonResult::arr(FALSE, Code::$admin_not_exists);
         }
         if ($oAdmin->status == SysAdmin::STATUS_BAN) {
-            return JsonResult::error(Code::$admin_is_blacklist);
+            return JsonResult::arr(FALSE, Code::$admin_is_blacklist);
         }
         if (!$oAdmin->checkPassword($password)) {
-            return JsonResult::error(Code::$admin_password_err);
+            return JsonResult::arr(FALSE, Code::$admin_password_err);
         }
-//        AdminService::getInstance()->
-//            ->updateLastInfo($oAdmin);
 
-        $oAdmin->refresh();
-        Yii::$app->panel->login($oAdmin);
-        return JsonResult::arr(Code::$ok);
+        return JsonResult::arr(TRUE, Code::$ok, $oAdmin);
     }
 }

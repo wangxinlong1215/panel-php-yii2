@@ -26,7 +26,7 @@ $config = [
         ],
         'panel'        => [
             'class'           => 'yii\web\User',
-            'identityClass'   => 'app\models\Admin',
+            'identityClass'   => 'app\models\data\SysAdmin',
             'enableAutoLogin' => FALSE,
             'idParam'         => '__admin',
             'loginUrl'        => '/panel/login'
