@@ -5,7 +5,6 @@ namespace app\modules\panel\controllers;
 use app\common\components\Code;
 use app\common\helper\Helper;
 use app\models\data\SysAdminLog;
-use app\modules\panel\services\AdminService;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -16,6 +15,9 @@ class BaseController extends \app\common\base\BaseController
     protected $except    = [];//Access不验证
     protected $mustlogin = [];//必须登陆
     protected $verbs     = [];//请求方式验证 例如：protected $verbs = ['index' => ['post']];
+
+    protected $error  = [];
+    protected $params = [];
 
     public function behaviors()
     {
@@ -149,5 +151,17 @@ class BaseController extends \app\common\base\BaseController
         ];
 
         (new SysAdminLog())->addRecord($data);
+    }
+
+    public function checkParams($data, object $method)
+    {
+        $method->setAttributes($data, FALSE);
+        if (!$method->validate()) {
+            $error       = $method->getFirstErrors();
+            $this->error = reset($error);
+            return FALSE;
+        }
+        $this->params = $method;
+        return TRUE;
     }
 }

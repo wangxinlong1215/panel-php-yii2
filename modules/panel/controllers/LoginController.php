@@ -59,31 +59,15 @@ class LoginController extends BaseController
      * 登出
      * @return \yii\web\Response
      * @author 王新龙
-     * @date   2019/9/11 4:30 PM
+     * @date   2021-09-03 13:57
      */
     public function actionLogout()
     {
-        /**api方式**/
-        $accessToken = $this->post('access_token', '');
-        if (!empty($accessToken)) {
-            AdminService::getInstance()->updateAccessToken($accessToken);
-            Yii::$app->panel->logout(FALSE);
-            if ($this->isPost()) {
-                return JsonResult::returnOk();
-            }
-            return $this->redirect('/panel/login');
-        }
-
-        /**session方式**/
         $adminInfo = $this->getUser();
         if (!empty($adminInfo)) {
-            AdminService::getInstance()->updateAccessToken($adminInfo->access_token);
             Yii::$app->panel->logout(FALSE);
         }
-        if ($this->isPost()) {
-            return JsonResult::returnOk();
-        }
-        return $this->redirect('/panel/login');
+        return JsonResult::ok();
     }
 
     /**

@@ -1,91 +1,138 @@
-<!doctype html>
-<html class="x-admin-sm">
+<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>权限管理系统</title>
-    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta charset="utf-8">
+    <title>后台管理系统</title>
+    <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport"
-          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
-    <meta http-equiv="Cache-Control" content="no-siteapp"/>
-    <link rel="stylesheet" href="/panel/css/font.css">
-    <link rel="stylesheet" href="/panel/css/xadmin.css">
-    <link rel="stylesheet" href="/panel/css/theme10.min.css">
-    <script src="/panel/lib/layui/layui.js" charset="utf-8"></script>
-    <script type="text/javascript" src="/panel/js/xadmin.js"></script>
-    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
-    <!--[if lt IE 9]>
-    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
-    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    <script>
-        // 是否开启刷新记忆tab功能
-        var is_remember = false;
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/static/panel/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/panel/style/admin.css" media="all">
 </head>
-<body class="index">
-<!-- 顶部开始 -->
-<div class="container">
-    <div class="logo">
-        <a href="/panel/index">权限管理系统</a></div>
-    <div class="left_open">
-        <a><i title="展开左侧栏" class="iconfont">&#xe699;</i></a>
-    </div>
-    <ul class="layui-nav right" lay-filter="">
-        <li class="layui-nav-item">
-            <a href="javascript:;">
-                <?= !empty(Yii::$app->panel->identity) ? Yii::$app->panel->identity->username : ''; ?>
-            </a>
-            <dl class="layui-nav-child">
-                <!-- 二级菜单 -->
-                <dd>
-                    <a onclick="xadmin.open('修改密码','/panel/admin/update-password',350,420)">修改密码</a>
-                </dd>
-                <dd>
-                    <a href="/panel/login/logout">退出</a>
-                </dd>
-            </dl>
-        </li>
-    </ul>
-</div>
-<!-- 顶部结束 -->
-<!-- 中部开始 -->
-<!-- 左侧菜单开始 -->
-<div class="left-nav">
-    <div id="side-nav">
-        <ul id="nav">
-            <?= include(APP_PATH.'/modules/panel/views/layouts/menu.php') ?>
-        </ul>
-    </div>
-</div>
-<!-- <div class="x-slide_left"></div> -->
-<!-- 左侧菜单结束 -->
-<!-- 右侧主体开始 -->
-<div class="page-content">
-    <div class="layui-tab tab" lay-filter="xbs_tab" lay-allowclose="false">
-        <ul class="layui-tab-title">
-            <li class="home">
-                <i class="layui-icon">&#xe68e;</i>我的桌面
-            </li>
-        </ul>
-        <div class="layui-unselect layui-form-select layui-form-selected" id="tab_right">
-            <dl>
-                <dd data-type="this">关闭当前</dd>
-                <dd data-type="other">关闭其它</dd>
-                <dd data-type="all">关闭全部</dd>
-            </dl>
+<body class="layui-layout-body">
+<div id="LAY_app">
+    <div class="layui-layout layui-layout-admin">
+        <!-- 头部区域开始 -->
+        <div class="layui-header">
+            <!-- 头部左侧区域开始 -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item layadmin-flexible" lay-unselect>
+                    <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+                        <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+                    </a>
+                </li>
+                <!--                <li class="layui-nav-item layui-hide-xs" lay-unselect>-->
+                <!--                    <a href="http://www.baidu.com" target="_blank" title="前台">-->
+                <!--                        <i class="layui-icon layui-icon-website"></i>-->
+                <!--                    </a>-->
+                <!--                </li>-->
+                <li class="layui-nav-item" lay-unselect>
+                    <a href="javascript:;" layadmin-event="refresh" title="刷新">
+                        <i class="layui-icon layui-icon-refresh-3"></i>
+                    </a>
+                </li>
+                <!--                <li class="layui-nav-item layui-hide-xs" lay-unselect>-->
+                <!--                    <input type="text" placeholder="搜索..." autocomplete="off" class="layui-input layui-input-search" layadmin-event="serach" lay-action="template/search.html?keywords=">-->
+                <!--                </li>-->
+            </ul>
+            <!-- 头部左侧区域结束 -->
+            <!-- 头部右侧区域开始 -->
+            <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+                <li class="layui-nav-item" lay-unselect>
+                    <a lay-href="app/message/index.html" layadmin-event="message" lay-text="消息中心">
+                        <i class="layui-icon layui-icon-notice"></i>
+                        <!-- 如果有新消息，则显示小圆点 -->
+                        <span class="layui-badge-dot"></span>
+                    </a>
+                </li>
+                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a href="javascript:;" layadmin-event="theme">
+                        <i class="layui-icon layui-icon-theme"></i>
+                    </a>
+                </li>
+                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a href="javascript:;" layadmin-event="note">
+                        <i class="layui-icon layui-icon-note"></i>
+                    </a>
+                </li>
+                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a href="javascript:;" layadmin-event="fullscreen">
+                        <i class="layui-icon layui-icon-screen-full"></i>
+                    </a>
+                </li>
+                <li class="layui-nav-item" lay-unselect>
+                    <a href="javascript:;">
+                        <cite><?= !empty(Yii::$app->panel->identity) ? Yii::$app->panel->identity->username : ''; ?></cite>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a lay-href="set/user/info.html">基本资料</a></dd>
+                        <dd><a lay-href="set/user/password.html">修改密码</a></dd>
+                        <hr>
+                        <dd layadmin-event="logout" style="text-align: center;"><a>退出</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a href="javascript:;" layadmin-event="about"><i class="layui-icon layui-icon-more-vertical"></i></a>
+                </li>
+            </ul>
+            <!-- 头部右侧区域结束 -->
         </div>
-        <div class="layui-tab-content">
-            <div class="layui-tab-item layui-show">
-                <iframe src='/panel/index/welcome' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+        <!-- 头部区域结束 -->
+
+        <!-- 侧边菜单 -->
+        <div class="layui-side layui-side-menu">
+            <div class="layui-side-scroll">
+                <div class="layui-logo" lay-href="/panel/index/welcome">
+                    <span>后台管理系统</span>
+                </div>
+                <?= include(APP_PATH . '/modules/panel/views/layouts/menu.php') ?>
             </div>
         </div>
-        <div id="tab_show"></div>
+
+        <!-- 页面标签开始 -->
+        <div class="layadmin-pagetabs" id="LAY_app_tabs">
+            <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+            <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+            <div class="layui-icon layadmin-tabs-control layui-icon-down">
+                <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+                    <li class="layui-nav-item" lay-unselect>
+                        <a href="javascript:;"></a>
+                        <dl class="layui-nav-child layui-anim-fadein">
+                            <dd layadmin-event="closeThisTabs"><a href="javascript:;">关闭当前标签页</a></dd>
+                            <dd layadmin-event="closeOtherTabs"><a href="javascript:;">关闭其它标签页</a></dd>
+                            <dd layadmin-event="closeAllTabs"><a href="javascript:;">关闭全部标签页</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+            <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
+                <ul class="layui-tab-title" id="LAY_app_tabsheader">
+                    <li lay-id="home/console.html" lay-attr="home/console.html" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+                </ul>
+            </div>
+        </div>
+        <!-- 页面标签结束 -->
+
+        <!-- 右侧主体开始 -->
+        <div class="layui-body" id="LAY_app_body">
+            <div class="layadmin-tabsbody-item layui-show">
+                <iframe src="/panel/index/welcome" frameborder="0" class="layadmin-iframe"></iframe>
+            </div>
+        </div>
+        <!-- 右侧主体结束 -->
+
+        <!-- 辅助元素，一般用于移动设备下遮罩 -->
+        <div class="layadmin-body-shade" layadmin-event="shade"></div>
     </div>
 </div>
-<div class="page-content-bg"></div>
-<style id="theme_style"></style>
-<!-- 右侧主体结束 -->
-<!-- 中部结束 -->
+<script src="/static/panel/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/static/panel/'
+        , version: Date.parse(new Date())
+    }).extend({
+        index: 'lib/index'
+    }).use('index');
+</script>
 </body>
 </html>

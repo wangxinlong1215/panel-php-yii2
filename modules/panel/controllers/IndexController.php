@@ -8,7 +8,6 @@ class IndexController extends BaseController
 
     public function actionIndex()
     {
-        echo 1;die;
         $this->view->title = "登录";
         return $this->render('index', [
             'csrf' => $this->getCsrf()
@@ -17,6 +16,7 @@ class IndexController extends BaseController
 
     public function actionWelcome()
     {
+        $this->layout      = 'frame';
         $this->view->title = "welcome";
         return $this->render('welcome', [
             'csrf' => $this->getCsrf()

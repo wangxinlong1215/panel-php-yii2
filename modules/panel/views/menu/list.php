@@ -1,232 +1,142 @@
-<div class="x-nav">
-    <span class="layui-breadcrumb">
-        <a href="">您所在的位置： 权限管理</a>
-        <a>
-          <cite>菜单列表</cite>
-        </a>
-    </span>
-    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
-       onclick="location.reload()" title="刷新">
-        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
-    </a>
-</div>
-
 <div class="layui-fluid">
-    <div class="layui-row layui-col-space15">
-        <div class="layui-col-md12">
-            <div class="layui-card">
-                <div class="layui-card-body ">
-                    <form class="layui-form layui-col-space5">
-                        所属系统：
-                        <div class="layui-inline layui-show-xs-block">
-                            <select name="system" id="system" lay-filter="mySelect">
-                                <?php foreach ($system_list as $item): ?>
-                                    <option value="<?php echo $item['value']; ?>"
-                                            <?php if (!empty($_GET['system']) && $_GET['system'] == $item['value']): ?>selected="selected"<?php endif; ?>><?php echo $item['system']; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <div class="layui-inline layui-show-xs-block">
-                            <button class="layui-btn" lay-submit="" lay-filter="sreach"><i
-                                        class="layui-icon">&#xe615;</i></button>
-                        </div>
-                    </form>
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">ID</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="id" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
                 </div>
-
-                <div class="layui-card-body">
-                    <button class="layui-btn" onclick="xadmin.open('添加菜单','/panel/menu/add',600,600)"><i
-                                class="layui-icon"></i>添加菜单
+                <div class="layui-inline">
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="username" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="email" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-block">
+                        <select name="sex">
+                            <option value="0">不限</option>
+                            <option value="1">男</option>
+                            <option value="2">女</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-user-front-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                     </button>
                 </div>
-
-                <div class="layui-card-body ">
-                    <table class="layui-table layui-form">
-                        <thead>
-                        <tr>
-                            <th>名称</th>
-                            <th>父级</th>
-                            <th>路由</th>
-                            <th>前端路径</th>
-                            <th>图标</th>
-                            <th>所属系统</th>
-                            <th width="50">排序</th>
-                            <th width="250">操作</th>
-                        </thead>
-                        <tbody class="x-cate">
-                        <?php foreach ($data as $val): ?>
-                            <tr cate-id='<?php echo $val['id']; ?>' fid='<?php echo $val['parent']; ?>' <?php if ($val['parent'] == 0): ?>style="background-color: #e2e2e2"<?php endif; ?>>
-                                <td>
-                                    <?php if ($val['parent'] == 0): ?>
-                                        <i class="layui-icon x-show" status='true'>&#xe623;</i>
-                                    <?php else: ?>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;├
-                                    <?php endif; ?>
-                                    <?php echo $val['name']; ?>
-                                </td>
-                                <td><?php echo $val['parent_name']; ?></td>
-                                <td><?php echo $val['route']; ?></td>
-                                <td><?php echo $val['path']; ?></td>
-                                <td><?php echo $val['icon']; ?></td>
-                                <td><?php echo $val['system']; ?></td>
-                                <td><input type="text" class="layui-input x-sort" name="order"
-                                           value="<?php echo $val['order']; ?>"
-                                           onchange="updateOrder(this,<?php echo $val["id"]; ?>)">
-                                </td>
-                                <td class="td-manage">
-                                    <button class="layui-btn layui-btn layui-btn-xs"
-                                            onclick="xadmin.open('编辑','/panel/menu/edit?id=<?php echo $val["id"]; ?>',600,600)">
-                                        <i class="layui-icon">&#xe642;</i>编辑
-                                    </button>
-                                    <?php if ($val['parent'] == 0): ?>
-                                        <button class="layui-btn layui-btn-warm layui-btn-xs"
-                                                onclick="xadmin.open('添加菜单','/panel/menu/add?id=<?php echo $val["id"]; ?>',600,600)">
-                                            <i class="layui-icon">&#xe642;</i>添加子栏目
-                                        </button>
-                                    <?php endif; ?>
-                                    <button class="layui-btn-danger layui-btn layui-btn-xs"
-                                            onclick="member_del(this,'<?php echo $val["id"]; ?>')" href="javascript:;">
-                                        <i class="layui-icon">&#xe640;</i>删除
-                                    </button>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
             </div>
+        </div>
+
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn layuiadmin-btn-useradmin" data-type="batchdel">删除</button>
+                <button class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加</button>
+            </div>
+
+            <table id="LAY-user-manage" lay-filter="LAY-user-manage"></table>
+            <script type="text/html" id="imgTpl">
+                <img style="display: inline-block; width: 50%; height: 100%;" src={{ d.avatar }}>
+            </script>
+            <script type="text/html" id="table-useradmin-webuser">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
         </div>
     </div>
 </div>
 <script>
-    var csrf = '<?= $csrf;?>';
-    layui.use(['table', 'laydate'], function () {
-        var table = layui.table
-            , laydate = layui.laydate
-            , form = layui.form;
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'useradmin', 'table'], function () {
+        var $ = layui.$
+            , form = layui.form
+            , table = layui.table;
 
-        $('.search .layui-btn').on('click', function () {
+        //监听搜索
+        form.on('submit(LAY-user-front-search)', function (data) {
+            var field = data.field;
+
+            //执行重载
+            table.reload('LAY-user-manage', {
+                where: field
+            });
+        });
+
+        //事件
+        var active = {
+            batchdel: function () {
+                var checkStatus = table.checkStatus('LAY-user-manage')
+                    , checkData = checkStatus.data; //得到选中的数据
+
+                if (checkData.length === 0) {
+                    return layer.msg('请选择数据');
+                }
+
+                layer.prompt({
+                    formType: 1
+                    , title: '敏感操作，请验证口令'
+                }, function (value, index) {
+                    layer.close(index);
+
+                    layer.confirm('确定删除吗？', function (index) {
+
+                        //执行 Ajax 后重载
+                        /*
+                        admin.req({
+                          url: 'xxx'
+                          //,……
+                        });
+                        */
+                        table.reload('LAY-user-manage');
+                        layer.msg('已删除');
+                    });
+                });
+            }
+            , add: function () {
+                layer.open({
+                    type: 2
+                    , title: '添加用户'
+                    , content: 'userform.html'
+                    , maxmin: true
+                    , area: ['500px', '450px']
+                    , btn: ['确定', '取消']
+                    , yes: function (index, layero) {
+                        var iframeWindow = window['layui-layer-iframe' + index]
+                            , submitID = 'LAY-user-front-submit'
+                            , submit = layero.find('iframe').contents().find('#' + submitID);
+
+                        //监听提交
+                        iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                            var field = data.field; //获取提交的字段
+
+                            //提交 Ajax 成功后，静态更新表格中的数据
+                            //$.ajax({});
+                            table.reload('LAY-user-front-submit'); //数据刷新
+                            layer.close(index); //关闭弹层
+                        });
+
+                        submit.trigger('click');
+                    }
+                });
+            }
+        };
+
+        $('.layui-btn.layuiadmin-btn-useradmin').on('click', function () {
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
         });
-
-        form.on('switch(statusTpl)', function (obj) {
-            var id = this.value;
-            var status = 2;
-            if (obj.elem.checked === true) {
-                status = 1;
-            }
-            $.ajax({
-                type: "POST",
-                url: "/panel/admin/update-status",
-                data: {_csrf: csrf, status: status, id: id},
-                datatype: "json",
-                success: function (data) {
-                    data = eval('(' + data + ')');
-                    if (data.code == '0000') {
-                        layer.closeAll();
-                        layer.msg('操作成功', {
-                            offset: '15px'
-                            , icon: 1
-                            , time: 1000
-                        });
-                    } else {
-                        layer.closeAll();
-                        layer.msg(data.msg, {
-                            offset: '15px'
-                            , icon: 2
-                            , time: 1000
-                        });
-                    }
-                },
-                error: function () {
-                    layer.closeAll();
-                    layer.msg('系统错误，请稍后再试');
-                }
-            });
-        });
     });
-
-    function updateOrder(obj, id) {
-        $.ajax({
-            type: "POST",
-            url: "/panel/menu/update-order",
-            data: {_csrf: csrf, id: id, order: $(obj).val()},
-            datatype: "json",
-            success: function (data) {
-                if (data.code == '0000') {
-                    layer.msg('操作成功', {offset: '100px', icon: 1, time: 1000});
-                    return false;
-                }
-                layer.closeAll();
-                layer.msg(data.msg, {offset: '100px', icon: 2, time: 1000});
-            },
-            error: function () {
-                layer.closeAll();
-                layer.msg('系统错误，请稍后再试');
-            }
-        });
-    }
-
-    $(function () {
-        $("tbody.x-cate tr[fid!='0']").hide();
-        // 栏目多级显示效果
-        $('.x-show').click(function () {
-            if ($(this).attr('status') == 'true') {
-                $(this).html('&#xe625;');
-                $(this).attr('status', 'false');
-                cateId = $(this).parents('tr').attr('cate-id');
-                $("tbody tr[fid=" + cateId + "]").show();
-            } else {
-                cateIds = [];
-                $(this).html('&#xe623;');
-                $(this).attr('status', 'true');
-                cateId = $(this).parents('tr').attr('cate-id');
-                getCateId(cateId);
-                for (var i in cateIds) {
-                    $("tbody tr[cate-id=" + cateIds[i] + "]").hide().find('.x-show').html('&#xe623;').attr('status', 'true');
-                }
-            }
-        })
-    })
-
-    var cateIds = [];
-
-    function getCateId(cateId) {
-        $("tbody tr[fid=" + cateId + "]").each(function (index, el) {
-            id = $(el).attr('cate-id');
-            cateIds.push(id);
-            getCateId(id);
-        });
-    }
-
-    function member_del(obj, id) {
-        layer.confirm('确认要删除吗？', function (index) {
-            $.ajax({
-                type: "POST",
-                url: "/panel/menu/del",
-                data: {_csrf: csrf, id: id},
-                datatype: "json",
-                success: function (data) {
-                    data = eval('(' + data + ')');
-                    if (data.code == '0000') {
-                        $(obj).parents("tr").remove();
-                        layer.closeAll();
-                        layer.msg('操作成功', {icon: 1, time: 1000});
-                    } else {
-                        layer.closeAll();
-                        layer.msg(data.msg, {
-                            offset: '15px'
-                            , icon: 2
-                            , time: 1000
-                        });
-                    }
-                },
-                error: function () {
-                    layer.closeAll();
-                    layer.msg('系统错误，请稍后再试');
-                }
-            });
-        });
-    }
 </script>
